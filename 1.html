@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        @property --opacity {
+            syntax: "<percentage>";
+            inherits: true;
+            initial-value: 0%;
+        }
+        @property --range {
+            syntax: "<percentage>";
+            inherits: true;
+            initial-value: 0%;
+        }
+        @property --x {
+            syntax: "<length>";
+            inherits: true;
+            initial-value: 0;
+        }
+        @property --y {
+            syntax: "<length>";
+            inherits: true;
+            initial-value: 0;
+        }
+        :root{
+            --opacity: 0%;
+            --range:0%;
+            --x:0;
+            --y:0;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        /* 基础样式 */
+        body {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* 遮罩层 */
+        .overlay {
+            position: absolute;
+            --x: 0;
+            --y: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: radial-gradient(circle at var(--x) var(--y), rgba(0, 0, 0, var(--opacity)) 0% , rgba(0, 0, 0, var(--opacity)) var(--range),white var(--range), white 100%);
+            justify-content: center;
+            align-items: center;
+            z-index: -1;
+            animation-duration: 0.5s;
+            animation-fill-mode: forwards;
+        }
+
+        /* 弹窗样式 */
+        .modal {
+            color: black;
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 400px;
+            height: 60px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            z-index: -2;
+            opacity: var(--range);
+        }
+        .buttonBox{
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
+
+            display: inline-block;
+        }
+        .buttonBox button{
+            margin-right: 10px;
+        }
+
+        @keyframes identifier {
+            to{
+                opacity: 1;
+                z-index: 10;
+                --range: 100%;
+            }
+        }
+
+        @keyframes identifier_1 {
+            from{
+                opacity: 1;
+                z-index: 10;
+                --range: 100%;
+            }
+            to{
+                opacity: 0;
+                z-index: -1;
+                --range: 0%;
+            }
+        }
+        @keyframes openRadial {
+            0% {
+                opacity: 0;
+                z-index: -2;
+            }
+            100% {
+                opacity: 1;
+                z-index: 999;
+            }
+        }
+        /* 关闭时的动画 */
+        @keyframes closeRadial {
+            0% {
+                opacity: 1;
+                z-index: 999;
+                --range: 100%;
+            }
+            100% {
+                opacity: 0;
+                z-index: -2;
+                --range: 0%;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+<button id="openModal">打开弹窗</button>
+
+<div id="overlay" class="overlay">
+    <div class="modal">
+        <h2>这是一个弹窗</h2>
+        <p>这里是弹窗的内容。</p>
+        <div class="buttonBox">
+            <button id="closeModal">取消</button>
+            <button id="continueModal">继续</button>
+        </div>
+
+    </div>
+</div>
+</body>
+<script>
+    // 获取按钮和弹窗相关元素
+    const openModalButton = document.getElementById('openModal');
+    const closeModalButton = document.getElementById('closeModal');
+    const overlay = document.getElementById('overlay');
+    const modal = overlay.querySelector('.modal');
+
+    // 打开弹窗
+    openModalButton.addEventListener('click', (e) => {
+        overlay.style.setProperty("--x",window.innerWidth-200+"px");
+        overlay.style.setProperty("--y",window.innerHeight-30+"px");
+        overlay.style.setProperty("--range","0%");
+        overlay.style.setProperty("--opacity","80%");
+        overlay.style.animationName="identifier";
+        modal.style.animationName="openRadial";
+    });
+
+
+    // 关闭弹窗时触发动画
+    closeModalButton.addEventListener('click', function (e) {
+        overlay.style.setProperty("--x",e.x+"px");
+        overlay.style.setProperty("--y",e.y+"px");
+        overlay.style.setProperty("--range","0%");
+        overlay.style.animationName="identifier_1";
+        modal.style.animationName="closeRadial";
+    });
+
+    // 点击遮罩关闭弹窗
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            overlay.style.setProperty("--x", e.x + "px");
+            overlay.style.setProperty("--y", e.y + "px");
+            overlay.style.setProperty("--range", "0%");
+            overlay.style.animationName = "identifier_1";
+
+        }
+    });
+
+
+</script>
+</html>

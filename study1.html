@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./lodash.min.js"></script>
+    <script src="./tailwind.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        clifford: '#da373d',
+                    }
+                }
+            }
+        }
+    </script>
+
+</head>
+<body>
+<!--<div class="w-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 shadow-md p-6 rounded-lg">-->
+<!--    <div class="flex gap-3">-->
+<!--        <div class="w-30 h-30 rounded-15 bg-orange-300 leading-30 justify-center items-center text-center text-white">!</div>-->
+<!--        <div class="text-3xl">标题</div>-->
+<!--    </div>-->
+
+<!--    <div class="my-4">我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容</div>-->
+<!--    <div class="flex justify-end">-->
+<!--        <div class="py- border rounded-sm">取消</div>-->
+<!--        <div class="py-2 px-3 border rounded-sm ml-2 bg-black text-white border-black">确定</div>-->
+<!--    </div>-->
+<!--</div>-->
+</body>
+<script src="dialog.js"></script>
+<script src="./low.js"></script>
+<script>
+    var dialog=createDialog({
+        title:"提示",
+        message:"你确定？",
+        buttons:{
+            confirm: {
+                text:"就它了"
+            },
+            cancel:{
+                text: "不想要了"
+            }
+        },
+        success:function () {
+            console.log("成功");
+
+        },
+        fail:function () {
+            console.log("取消")
+        }
+    })
+
+    // console.log(a);
+    // var dialog=createDialog();
+    // dialog.confirm();
+    // dialog.info({});
+    // dialog.error({});
+    // dialog.warning({});
+
+</script>
+</html>

@@ -1,0 +1,75 @@
+/* 初始样式 */
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* 按钮样式 */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 5;
+}
+
+/* 遮罩层 */
+.mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色 */
+    transition: background-color 0.3s ease-out; /* 遮罩透明度的过渡效果 */
+    z-index: 6; /* 确保遮罩层在抽屉上面，但在按钮下面 */
+    opacity: 0; /* 初始不显示遮罩 */
+    pointer-events: none; /* 避免遮罩层影响到其他元素 */
+}
+
+/* 抽屉 */
+.drawer {
+    position: fixed;
+    bottom: -50%; /* 初始位置在屏幕下方 */
+    left: 0;
+    right: 0;
+    background-color: white;
+    height: 50%; /* 抽屉占屏幕的50% */
+    transition: bottom 0.3s ease-out; /* 弹出动画 */
+    z-index: 10; /* 确保抽屉在遮罩层上面 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    user-select: none;
+}
+
+/* 抽屉内容 */
+.drawer-content {
+    padding: 20px;
+    z-index: 10;
+}
+
+/* 抽屉打开后的状态 */
+.drawer.open {
+    bottom: 0; /* 抽屉从下方弹出 */
+}
+
+/* 遮罩透明度变化 */
+.mask.transparent {
+    background-color: rgba(0, 0, 0, 0); /* 遮罩层变透明 */
+}
+
+/* 抽屉中间的可拖动圆角矩形 */
+.drawer-handle {
+    width: 50px;
+    height: 8px;
+    background-color: #ccc;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+    z-index: 15; /* 确保它位于抽屉内容上方 */
+}

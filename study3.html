@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./lodash.min.js"></script>
+    <script src="./tailwind.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        clifford: '#da373d',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .item{
+            width: 100px;
+            height: 100px;
+            background-color: orange;
+            cursor: pointer;
+        }
+        .drag-item:hover{
+
+            filter: brightness(80%);
+        }
+        .workbench-page{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: absolute;
+        }
+        .workbench-page img.selected {
+            border: 4px solid blue;
+            box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="w-screen h-screen flex items-center">
+        <div class="h-screen w-400 bg-gray-300 drag-container">
+            <img class="drag-item hover:cursor-pointer" src="https://p.ipic.vip/2jvy48.jpeg" alt="">
+            <img class="drag-item hover:cursor-pointer" src="https://p.ipic.vip/rghs5z.jpeg" alt="">
+        </div>
+        <div class="h-screen flex-1 bg-white workbench">
+            <div class="workbench-page">
+
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./low.js"></script>
+<!--<script>-->
+    // var item = document.querySelector(".item");
+    // var distanceX =0;
+    // var distanceY =0;
+    // function moveCallback(e) {
+    //     // console.log(e.x,e.y);
+    //     item.style.transform=`translate(${e.x-distanceX}px,${e.y-distanceY}px)`;
+    //     item.style.cursor="grabbing"
+    // }
+    // // onmousedown
+    // item.addEventListener("mousedown",function (e) {
+    //     distanceX=e.offsetX;
+    //     distanceY=e.offsetY;
+    //     item.style.cursor="grab";
+    //     document.addEventListener("mousemove",moveCallback);
+    //     document.addEventListener('mouseup',function () {
+    //         document.removeEventListener('mousemove',moveCallback);
+    //         item.style.cursor="pointer"
+    //     })
+    // })
+    // // onmousemove
+    // // onmouseup
+<script>
+    var container = document.querySelector(".drag-container");
+    var workbench = document.querySelector(".workbench");
+    var workbenchPage = document.querySelector(".workbench-page");
+    workbenchPositionInfo =workbenchPage.getBoundingClientRect();
+    var distanceX =0;
+    var distanceY =0;
+
+    var target=null;
+    container.addEventListener("mousedown",function (e) {
+        e.preventDefault();
+        var startX=e.x;
+        var startY=e.y;
+
+        distanceX=e.offsetX;
+        distanceY=e.offsetY;
+        target=e.target.cloneNode(true);
+        var position = e.target.getBoundingClientRect();
+        target.style.cssText=`position:absolute;opacity:0.6;left:${position.left};top:${position,top}`;
+        document.body.appendChild(target);
+        var ratio=1;
+        var distanceMoveX=0
+        function move(e) {
+            var endX =e.x;
+            var endY =e.y;
+            var distance = Math.sqrt(Math.pow(endX-startX,2)+Math.pow(endY-startY,2));
+            distanceMoveX=endX-startX;
+            ratio=1+distance/window.outerWidth;
+            target.style.cssText=`position:absolute;opacity:0.6;left:${e.x-distanceX}px;top:${e.y-distanceY}px;transform:scale(${ratio>=1.4?1.4:ratio})`;
+        }
+        document.addEventListener('mousemove',move);
+        document.addEventListener('mouseup',function (e) {
+            document.removeEventListener('mousemove',move);
+            if (e.x>workbenchPositionInfo.left && e.y>workbenchPositionInfo.top){
+                target.style.opacity=1;
+                target.style.left=`${distanceMoveX-workbenchPositionInfo.left}px`;
+                workbenchPage.appendChild(target);
+            }else{
+                target.style.cssText=`position:absolute;opacity:1;left:${position.left}px;top:${position.top}px;transform:scale(1);transition: all ease-in 200ms`;
+                target.addEventListener('transitionend',function () {
+                    target.remove();
+                })
+            }
+
+        })
+
+
+
+    })
+
+
+    workbenchPage.addEventListener("mousedown", function (e) {
+// 给点击的图片添加选中样式
+        var images = document.querySelectorAll('.workbench-page img');
+        console.log(images)
+        images.forEach(image => {
+            image.addEventListener('click', function () {
+                // 取消其他图片的选中效果
+                images.forEach(img => img.classList.remove('selected'));
+
+                // 给当前图片添加选中效果
+                this.classList.add('selected');
+            });
+        });
+        if (e.target.tagName.toLowerCase() === 'img') {
+            var img = e.target;
+            var startX = e.clientX;
+            var startY = e.clientY;
+            var angle = 0;
+
+            var currentTransform = img.style.transform;
+            console.log(currentTransform);
+            var match = currentTransform.match(/rotate\((\d+)deg\)/);
+            if (match) {
+                angle = parseInt(match[1]);
+            }
+
+            function rotateImage(e) {
+                var dx = e.clientX - startX;
+                var dy = e.clientY - startY;
+                var newAngle = angle + Math.atan2(dy, dx) * (180 / Math.PI);
+                img.style.transform = getLastRotate(currentTransform+` rotate(${newAngle}deg)`);
+            }
+
+            document.addEventListener('mousemove', rotateImage);
+
+            document.addEventListener('mouseup', function () {
+                document.removeEventListener('mousemove', rotateImage);
+            });
+        }
+
+    })
+    //获取最后一个rotate
+    function getLastRotate(transformString) {
+        // 使用正则表达式提取所有 rotate() 的角度值
+        const rotateMatches = transformString.match(/rotate\((-?\d+\.?\d*)deg\)/g);
+
+        if (rotateMatches) {
+            var lastRotate = rotateMatches[rotateMatches.length - 1];
+            // 返回 transform 字符串，去除所有 rotate() 并保留最后一个 rotate()
+            return transformString.replace(/rotate\(-?\d+\.?\d*deg\)/g, '').trim() + ' ' + lastRotate;
+        }
+
+        // 如果没有 rotate()，返回原始 transform 字符串
+        return transformString;
+    }
+</script>
+</html>

@@ -43,3 +43,26 @@
 height: 588px;
 background: linear-gradient(90deg, rgba(147,75,255,0.75), rgba(95,58,252,0.75));
 }
+.suoyou{
+    width: 119px;
+height: 48px;
+background: #663CFC;
+box-shadow: 0px 6px 24px 0px rgba(116,65,253,0.5);
+border-radius: 24px;
+line-height: 48px;
+text-align: center;
+color: #FFFFFF;
+}
+
+.body-bottom{
+    width: 1920px;
+height: 992px;
+background: linear-gradient(90deg, #934BFF, #5F3AFC);
+}
+.body-bottom-white{
+    width: 1920px;
+height: 451px;
+background: white;
+z-index: 2;
+clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 50%); /* 设置梯形路径 */
+}
